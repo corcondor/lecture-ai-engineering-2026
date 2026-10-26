@@ -12,3 +12,6 @@ learning_log/
 
 # macOS
 .DS_Store
+
+# 第1回の個人実験ログ
+results/
