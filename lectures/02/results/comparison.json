@@ -1,0 +1,31 @@
+{
+  "only_config_difference": {
+    "num_train_epochs": [
+      20,
+      10
+    ]
+  },
+  "evaluation_data_identical": true,
+  "rows": [
+    {
+      "num_train_epochs": 20,
+      "format_rate": 1.0,
+      "content_rate": 0.9047619047619048,
+      "training_seconds": 232.82160711288452,
+      "final_logged_loss": 0.013882364332675933,
+      "final_logged_loss_step": 40,
+      "global_step": 40,
+      "loss_definition": "Last logged training loss, averaged over the final logging interval."
+    },
+    {
+      "num_train_epochs": 10,
+      "format_rate": 1.0,
+      "content_rate": 0.9523809523809523,
+      "training_seconds": 119.15332078933716,
+      "final_logged_loss": 0.1003848671913147,
+      "final_logged_loss_step": 20,
+      "global_step": 20,
+      "loss_definition": "Last logged training loss, averaged over the final logging interval."
+    }
+  ]
+}

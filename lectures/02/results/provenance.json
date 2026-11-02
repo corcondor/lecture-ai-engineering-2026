@@ -1,0 +1,24 @@
+{
+  "source_repository": "matsuolab/lecture-ai-engineering-2026",
+  "source_commit": "fae899a409e2c99feee9d44a3789f936f5fc64ee",
+  "source_notebook": "notebooks/lora_format_tuning.ipynb",
+  "source_notebook_git_blob_sha": "f395c4900558995276160f7849648edb98142009",
+  "execution_environment": "Kaggle private notebook",
+  "execution_url": "https://www.kaggle.com/code/geocpuresearch/aie2026-day2-kaggle",
+  "run_id": 364695496,
+  "execution_operator": "AI agent acting on the account holder instructions",
+  "execution_start_utc": "2026-11-01T23:38:35Z",
+  "platform_status": "Successfully ran in 644.4s",
+  "gpu_runtime": "Tesla T4",
+  "gpu_visible_count": 1,
+  "training_completed": true,
+  "data_origin": "Official public code-generated fictional FAQ, train=14, valid=7, test=21",
+  "config_difference": {
+    "num_train_epochs": [
+      20,
+      10
+    ]
+  },
+  "metrics_origin": "Actual saved run outputs, not instructor reference results",
+  "model_weights_included": false
+}
