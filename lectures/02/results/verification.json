@@ -1,0 +1,14 @@
+{
+  "actual_evaluation_rows_rescored": 84,
+  "actual_knowledge_outputs_classified": 16,
+  "two_training_runs_completed": true,
+  "only_config_difference": {
+    "num_train_epochs": [
+      20,
+      10
+    ]
+  },
+  "test_data_identical": true,
+  "final_loss_matches_training_history": true,
+  "gpu": "Tesla T4"
+}

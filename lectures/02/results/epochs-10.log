@@ -1,0 +1,205 @@
+START 10 2026-11-01T23:44:45Z
+RUNTIME {"python": "3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]", "torch": "2.11.0+cu128", "gpu": "Tesla T4", "gpu_memory_bytes": 15636037632, "versions": {"transformers": "5.18.0", "peft": "0.21.1", "trl": "1.14.2", "accelerate": "1.15.0", "datasets": "5.1.0"}}
+{
+  "base_model": "Qwen/Qwen3.5-0.8B",
+  "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "seed": 42,
+  "num_train_epochs": 10,
+  "warmup_steps": 6,
+  "lr": 0.0002,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "max_seq_len": 512,
+  "max_new_tokens": 96,
+  "gen": {
+    "do_sample": false
+  },
+  "work_dir": "/kaggle/working/aie2026-day2/epochs-10",
+  "drive_dir": "/content/drive/MyDrive/aie2026/qlora_lab"
+}
+CELL 7
+train=14 valid=7 test=21 gold=21
+学習例の 1 件 | 質問: 課題の提出期限はいつですか | 望ましい出力: {"answer": "課題の提出期限は 9 月 30 日 23:59（日本時間）です。", "needs_review": false}
+CELL 9
+
+Loading weights:   0%|          | 0/320 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/320 [00:00<04:43,  1.13it/s]
+Loading weights: 100%|██████████| 320/320 [00:00<00:00, 354.99it/s]
+loaded: Qwen/Qwen3.5-0.8B | device: cuda | 重みのメモリ(GB): 3.01
+CELL 10
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+{"label": "before", "n": 21, "format_rate": 0.09523809523809523, "content_rate": 0.0, "both_rate": 0.0, "seconds": 19.4}
+                           質問  正解の needs_review  ...      形式の失敗理由 内容
+0                     提出の期限は？             False  ...  missing_key  ×
+1          提出期限の日付と時刻を教えてください             False  ...  missing_key  ×
+2            課題の締切は何月何日の何時ですか             False  ...  missing_key  ×
+3                      提出場所は？             False  ...  missing_key  ×
+4              課題の提出はどこで行いますか             False  ...  missing_key  ×
+5             提出物を出す先を教えてください             False  ...  missing_key  ×
+6               PDF 以外でも出せますか             False  ...  missing_key  ×
+7            提出するファイルの形式は何ですか             False  ...  missing_key  ×
+8        提出ファイルは何形式で、いくつ出しますか             False  ...  missing_key  ×
+9                  相談できる時間帯は？             False  ...  missing_key  ×
+10      オフィスアワーの曜日と時間を教えてください             False  ...  missing_key  ×
+11  質問を受け付けてもらえるのは何曜日の何時からですか             False  ...  missing_key  ×
+12             締切後の扱いを教えてください             False  ...  missing_key  ×
+13     提出が締切に間に合わなかったらどうなりますか             False  ...  missing_key  ×
+14         期限後に提出した課題は受理されますか             False  ...  missing_key  ×
+15                  成績はいつ出ますか              True  ...  missing_key  ×
+16              講義の録画は公開されますか              True  ...               ×
+17            課題の文字数に制限はありますか              True  ...  missing_key  ×
+18     提出した課題へのフィードバックはもらえますか              True  ...  missing_key  ×
+19          参考文献の書き方に指定はありますか              True  ...  missing_key  ×
+20         オフィスアワーは事前予約が必要ですか              True  ...               ×
+
+[21 rows x 6 columns]
+TRAINING 10
+
+Tokenizing train dataset:   0%|          | 0/14 [00:00<?, ? examples/s]
+Tokenizing train dataset: 100%|██████████| 14/14 [00:00<00:00, 723.66 examples/s]
+
+Building labels for train dataset:   0%|          | 0/14 [00:00<?, ? examples/s]
+Building labels for train dataset: 100%|██████████| 14/14 [00:00<00:00, 2116.58 examples/s]
+
+Truncating train dataset:   0%|          | 0/14 [00:00<?, ? examples/s]
+Truncating train dataset: 100%|██████████| 14/14 [00:00<00:00, 2257.08 examples/s]
+
+Dropping fully masked examples from train dataset:   0%|          | 0/14 [00:00<?, ? examples/s]
+Dropping fully masked examples from train dataset: 100%|██████████| 14/14 [00:00<00:00, 4920.42 examples/s]
+
+Tokenizing eval dataset:   0%|          | 0/7 [00:00<?, ? examples/s]
+Tokenizing eval dataset: 100%|██████████| 7/7 [00:00<00:00, 639.63 examples/s]
+
+Building labels for eval dataset:   0%|          | 0/7 [00:00<?, ? examples/s]
+Building labels for eval dataset: 100%|██████████| 7/7 [00:00<00:00, 1377.63 examples/s]
+
+Truncating eval dataset:   0%|          | 0/7 [00:00<?, ? examples/s]
+Truncating eval dataset: 100%|██████████| 7/7 [00:00<00:00, 1285.19 examples/s]
+
+Dropping fully masked examples from eval dataset:   0%|          | 0/7 [00:00<?, ? examples/s]
+Dropping fully masked examples from eval dataset: 100%|██████████| 7/7 [00:00<00:00, 2257.60 examples/s]
+trainable params: 6,389,760 || all params: 758,782,784 || trainable%: 0.8421
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 248046}.
+
+  0%|          | 0/20 [00:00<?, ?it/s]
+  5%|▌         | 1/20 [00:06<02:12,  6.98s/it]
+ 10%|█         | 2/20 [00:12<01:46,  5.94s/it]
+ 15%|█▌        | 3/20 [00:19<01:50,  6.48s/it]
+ 20%|██        | 4/20 [00:24<01:35,  5.98s/it]
+ 25%|██▌       | 5/20 [00:31<01:34,  6.30s/it]
+ 30%|███       | 6/20 [00:36<01:21,  5.82s/it]
+ 35%|███▌      | 7/20 [00:42<01:18,  6.07s/it]
+ 40%|████      | 8/20 [00:47<01:08,  5.68s/it]
+ 45%|████▌     | 9/20 [00:54<01:05,  5.96s/it]
+ 50%|█████     | 10/20 [00:59<00:56,  5.67s/it]
+                                               
+{'loss': '1.561', 'grad_norm': '2.24', 'learning_rate': '0.0001782', 'entropy': '1.843', 'num_tokens': '1.786e+04', 'mean_token_accuracy': '0.6873', 'epoch': '5'}
+
+ 50%|█████     | 10/20 [00:59<00:56,  5.67s/it]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+ 55%|█████▌    | 11/20 [01:06<00:54,  6.10s/it]
+ 60%|██████    | 12/20 [01:11<00:45,  5.74s/it]
+ 65%|██████▌   | 13/20 [01:17<00:42,  6.00s/it]
+ 70%|███████   | 14/20 [01:22<00:33,  5.66s/it]
+ 75%|███████▌  | 15/20 [01:29<00:29,  5.97s/it]
+ 80%|████████  | 16/20 [01:34<00:22,  5.72s/it]
+ 85%|████████▌ | 17/20 [01:41<00:18,  6.01s/it]
+ 90%|█████████ | 18/20 [01:46<00:11,  5.77s/it]
+ 95%|█████████▌| 19/20 [01:53<00:06,  6.08s/it]
+100%|██████████| 20/20 [01:58<00:00,  5.75s/it]
+                                               
+{'loss': '0.1004', 'grad_norm': '0.389', 'learning_rate': '2.507e-06', 'entropy': '0.2101', 'num_tokens': '3.572e+04', 'mean_token_accuracy': '0.9824', 'epoch': '10'}
+
+100%|██████████| 20/20 [01:58<00:00,  5.75s/it]
+                                               
+{'train_runtime': '118.8', 'train_samples_per_second': '1.178', 'train_steps_per_second': '0.168', 'train_loss': '0.8308', 'epoch': '10'}
+
+100%|██████████| 20/20 [01:58<00:00,  5.75s/it]
+100%|██████████| 20/20 [01:58<00:00,  5.94s/it]
+学習時間: 119 秒 | ステップ数: 20 | エポック: 10.0
+CELL 15
+{"label": "after", "n": 21, "format_rate": 1.0, "content_rate": 0.9523809523809523, "both_rate": 0.9523809523809523, "seconds": 38.0}
+         n  format_rate  content_rate  both_rate  seconds
+label                                                    
+before  21     0.095238      0.000000   0.000000     19.4
+after   21     1.000000      0.952381   0.952381     38.0
+退行: []
+                           質問  ...  学習後 形式/内容
+0                     提出の期限は？  ...        ○/○
+1          提出期限の日付と時刻を教えてください  ...        ○/○
+2            課題の締切は何月何日の何時ですか  ...        ○/○
+3                      提出場所は？  ...        ○/○
+4              課題の提出はどこで行いますか  ...        ○/○
+5             提出物を出す先を教えてください  ...        ○/○
+6               PDF 以外でも出せますか  ...        ○/×
+7            提出するファイルの形式は何ですか  ...        ○/○
+8        提出ファイルは何形式で、いくつ出しますか  ...        ○/○
+9                  相談できる時間帯は？  ...        ○/○
+10      オフィスアワーの曜日と時間を教えてください  ...        ○/○
+11  質問を受け付けてもらえるのは何曜日の何時からですか  ...        ○/○
+12             締切後の扱いを教えてください  ...        ○/○
+13     提出が締切に間に合わなかったらどうなりますか  ...        ○/○
+14         期限後に提出した課題は受理されますか  ...        ○/○
+15                  成績はいつ出ますか  ...        ○/○
+16              講義の録画は公開されますか  ...        ○/○
+17            課題の文字数に制限はありますか  ...        ○/○
+18     提出した課題へのフィードバックはもらえますか  ...        ○/○
+19          参考文献の書き方に指定はありますか  ...        ○/○
+20         オフィスアワーは事前予約が必要ですか  ...        ○/○
+
+[21 rows x 6 columns]
+CELL 17
+                   質問  ...                                                                 学習後の出力
+0  この講座の最終課題の締切はいつですか  ...  {"answer": "課題の提出期限は 9 月 30 日 23:59（日本時間）です。", "needs_review": false}
+1        担当教員の名前は何ですか  ...      {"answer": "この FAQ には記載がありません。必ずに確認が必要です。", "needs_review": true}
+2      次回の講義のテーマは何ですか  ...      {"answer": "この FAQ には記載がありません。運営に確認が必要です。", "needs_review": true}
+3       課題の提出期限はいつですか  ...  {"answer": "課題の提出期限は 9 月 30 日 23:59（日本時間）です。", "needs_review": false}
+
+[4 rows x 6 columns]
+CELL 19
+{
+  "config": {
+    "base_model": "Qwen/Qwen3.5-0.8B",
+    "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+    "seed": 42,
+    "num_train_epochs": 10,
+    "warmup_steps": 6,
+    "lr": 0.0002,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "max_seq_len": 512,
+    "max_new_tokens": 96,
+    "gen": {
+      "do_sample": false
+    }
+  },
+  "versions": {
+    "transformers": "5.18.0",
+    "peft": "0.21.1",
+    "trl": "1.14.2",
+    "torch": "2.11.0+cu128"
+  },
+  "method": "LoRA（量子化なし）",
+  "before": {
+    "label": "before",
+    "n": 21,
+    "format_rate": 0.09523809523809523,
+    "content_rate": 0.0,
+    "both_rate": 0.0,
+    "seconds": 19.4
+  },
+  "after": {
+    "label": "after",
+    "n": 21,
+    "format_rate": 1.0,
+    "content_rate": 0.9523809523809523,
+    "both_rate": 0.9523809523809523,
+    "seconds": 38.0
+  },
+  "regressed": [],
+  "executed_training_myself": true
+}
+COMPLETE 10 {"training_seconds": 119.15332078933716, "final_logged_loss": 0.1003848671913147, "final_logged_loss_step": 20, "global_step": 20, "loss_definition": "Last logged training loss, averaged over the final logging interval."}
