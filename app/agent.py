@@ -16,7 +16,7 @@ import inspect
 import json
 from pathlib import Path
 
-from pydantic_ai import Agent
+from pydantic_ai import Agent, DeferredToolRequests, DeferredToolResults
 from pydantic_ai.exceptions import ModelHTTPError
 from fastmcp import Client
 from pydantic_ai.mcp import MCPToolset, StdioTransport
@@ -32,17 +32,20 @@ INSTRUCTIONS = """\
 あなたはAIエンジニアリング講座（AIE2026）の学習支援エージェントです。
 - 用語や講座に固有のことを答える前に、必ず search_glossary で用語集を確認する。
 - 回の内容を聞かれたら get_lecture_summary を使う。
+- 確認問題を求められたら make_quiz を使う。
+- 学習記録の保存を求められたら save_learning_log を使う。保存には利用者の確認が必要。
 - 用語集に見つからないことは、推測で断定せず「用語集にはない」と伝える。
 - 回答の最後に、関係する回（第N回）を示す。
 - 宿題の答えそのものは書かず、考え方のヒントで導く。
 """
 
 # モデルは実行時に渡す（テストではAPIを呼ばない TestModel に差し替えるため）
-agent = Agent(instructions=INSTRUCTIONS)
+agent = Agent(instructions=INSTRUCTIONS, output_type=[str, DeferredToolRequests])
 agent.tool_plain(tools.search_glossary)
 agent.tool_plain(tools.get_lecture_summary)
 
-# TODO(第3回 演習): tools.py に make_quiz を作り、ここで登録しよう
+agent.tool_plain(tools.make_quiz)
+agent.tool_plain(tools.save_learning_log, requires_approval=True)
 
 # 第5回: 使う MCP サーバーの設定ファイル。Claude Desktop や Cursor と同じ "mcpServers" 形式
 MCP_CONFIG = Path(__file__).resolve().parent / "mcp_servers.json"
@@ -109,6 +112,31 @@ def print_trace(result) -> None:
     print(f"[usage] {result.usage}")
 
 
+def run_with_approval(target: Agent, question: str, model):
+    """保存内容を表示し、明示的な y/yes だけ承認して同じ履歴から再開する。"""
+    result = target.run_sync(question, model=model)
+    while isinstance(result.output, DeferredToolRequests):
+        if result.output.calls:
+            raise RuntimeError("外部実行が必要なツールはこのCLIでは扱えません。")
+        approvals = {}
+        for call in result.output.approvals:
+            # JSON 表示で改行・制御文字をエスケープし、確認内容を偽装させない。
+            print(f"\n[確認] {call.tool_name}: {json.dumps(call.args_as_dict(), ensure_ascii=False)}")
+            try:
+                approved = input("この内容を保存しますか？ [y/N]: ").strip().casefold() in {"y", "yes"}
+            except (EOFError, KeyboardInterrupt):
+                print("\n入力が中断されたため保存を中止しました。")
+                raise SystemExit(1)
+            approvals[call.tool_call_id] = approved
+            if not approved:
+                print("保存を拒否しました。")
+        result = target.run_sync(
+            model=model, message_history=result.all_messages(), usage=result.usage,
+            deferred_tool_results=DeferredToolResults(approvals=approvals),
+        )
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="学習支援エージェントに質問する")
     parser.add_argument("question", nargs="?")
@@ -128,7 +156,10 @@ def main() -> None:
     if args.mcp:
         print("[tools] MCP サーバー（app/mcp_servers.json）")
     try:
-        result = target.run_sync(args.question, model=build_model())
+        result = run_with_approval(target, args.question, build_model())
+    except (OSError, ValueError) as e:
+        print(f"実行できませんでした: {e}")
+        raise SystemExit(1)
     except ModelHTTPError as e:
         print(api_error_message(e.status_code, str(e.body)[:200]))
         raise SystemExit(1)
